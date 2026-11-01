@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabecera(${ent.titulo()})}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragmentos :: barra}"></nav>
+<main class="container pb-5" style="max-width: 640px">
+    <h1 class="h3 mb-3" th:text="${editar} ? 'Editar ' + ${ent.singular()} + ' ' + ${clave} : ${ent.nuevo()}">Formulario</h1>
+    <div th:replace="~{fragmentos :: avisos}"></div>
+
+    <form method="post" class="card card-body shadow-sm"
+          th:action="${editar} ? @{/admin/{e}/{c}/actualizar(e=${ent.id()},c=${clave})} : @{/admin/{e}/guardar(e=${ent.id()})}">
+
+        <div class="mb-3" th:each="c : ${campos}">
+            <!-- texto, numero, contrasena -->
+            <th:block th:if="${c.esInput()}">
+                <label class="form-label" th:for="${c.nombre()}" th:text="${c.etiqueta()}">Etiqueta</label>
+                <input class="form-control" th:id="${c.nombre()}" th:name="${c.nombre()}" th:type="${c.htmlType()}"
+                       th:value="${c.htmlType() == 'password'} ? '' : ${valores.get(c.nombre())}"
+                       th:attr="step=${c.tipo().name() == 'DECIMAL'} ? 'any' : null"
+                       th:required="${c.obligatorio(editar)}"
+                       th:readonly="${editar and (c.bloqueado() or c.soloCrear())}">
+            </th:block>
+
+            <!-- desplegable -->
+            <th:block th:if="${c.esSelect()}">
+                <label class="form-label" th:for="${c.nombre()}" th:text="${c.etiqueta()}">Etiqueta</label>
+                <select class="form-select" th:id="${c.nombre()}" th:name="${c.nombre()}" th:required="${c.obligatorio(editar)}">
+                    <option th:if="${c.vacio() != null}" value="" th:text="${c.vacio()}">Ninguno</option>
+                    <option th:if="${c.vacio() == null}" value="" disabled
+                            th:selected="${valores.get(c.nombre()) == null or valores.get(c.nombre()) == ''}">Elegí una opción</option>
+                    <option th:each="o : ${opciones.get(c.nombre())}" th:value="${o.valor()}" th:text="${o.etiqueta()}"
+                            th:selected="${o.valor() == valores.get(c.nombre())}">Opcion</option>
+                </select>
+            </th:block>
+
+            <!-- casilla -->
+            <div th:if="${c.esCheck()}" class="form-check">
+                <input class="form-check-input" type="checkbox" th:id="${c.nombre()}" th:name="${c.nombre()}"
+                       th:checked="${valores.get(c.nombre()) == 'true' or valores.get(c.nombre()) == 'on'}">
+                <label class="form-check-label" th:for="${c.nombre()}" th:text="${c.etiqueta()}">Etiqueta</label>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-end">
+            <a class="btn btn-outline-secondary" th:href="@{/admin/{e}(e=${ent.id()})}">Cancelar</a>
+            <button class="btn btn-success">Guardar</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

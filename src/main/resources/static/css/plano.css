@@ -1,0 +1,4 @@
+.lote{width:58px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:.25rem;font-weight:600;border:2px dashed #ced4da;color:#6c757d}
+.lote-socio{border:2px solid #0d6efd;background:#cfe2ff;color:#0a58ca}
+.lote-ocupado{border:2px solid #198754;background:#198754;color:#fff}
+.leyenda-lote{display:inline-block;width:1rem;height:1rem;border-radius:.2rem;vertical-align:-2px;margin-right:.35rem}

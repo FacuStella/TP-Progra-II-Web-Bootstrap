@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragmentos :: cabecera('Plano')}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragmentos :: barra}"></nav>
+<main class="container pb-5">
+    <h1 class="h3 mb-3">Plano</h1>
+    <div th:replace="~{fragmentos :: avisos}"></div>
+
+    <div class="d-flex flex-wrap gap-4 mb-3 align-items-center">
+        <span><strong th:text="${total}">0</strong> garages</span>
+        <span><strong th:text="${conVehiculo}">0</strong> con vehículo</span>
+        <span><strong th:text="${sinPropietario}">0</strong> sin propietario</span>
+        <span class="ms-auto small text-muted">
+            <span class="leyenda-lote lote" style="width:1rem;height:1rem"></span>Sin propietario
+            <span class="leyenda-lote lote lote-socio ms-3" style="width:1rem;height:1rem"></span>Con socio
+            <span class="leyenda-lote lote lote-ocupado ms-3" style="width:1rem;height:1rem"></span>Con vehículo
+        </span>
+    </div>
+
+    <p th:if="${zonas.isEmpty()}" class="alert alert-secondary">Todavía no hay zonas.</p>
+    <section class="card shadow-sm mb-3" th:each="z : ${zonas}">
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-baseline gap-3 mb-3">
+                <h2 class="h5 mb-0">Zona <span th:text="${z.letra()}">A</span></h2>
+                <span class="text-muted" th:text="${z.detalle()}">detalle</span>
+                <span class="ms-auto small" th:text="${z.resumen()}">0 de 0</span>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <div th:each="l : ${z.lotes()}" th:class="'lote ' + ${l.clase()}" th:text="${l.numero()}" th:title="${l.titulo()}">1</div>
+                <span th:if="${z.lotes().isEmpty()}" class="text-muted">Sin garages</span>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
